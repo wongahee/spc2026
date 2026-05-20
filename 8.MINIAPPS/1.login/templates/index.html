@@ -1,0 +1,28 @@
+<!-- 1. html 파일 상속 받기 -->
+{% extends "base.html" %}
+
+<!-- 2. title 설정 -->
+{% block title %}
+Home Page
+{% endblock %}
+
+<!-- 3. contents -->
+{% block content %}
+
+<!-- flash messages -->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for msg in messages %}
+            <p>{{ msg }}</p>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<!-- main -->
+{% if session.user %}
+    <p>Welcome, {{ session.user }}!</p>
+{% else %}
+    <p>로그인이 필요합니다.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,33 @@
+<!-- 1. html 파일 상속 받기 -->
+{% extends "base.html" %}
+
+<!-- 2. title 설정 -->
+{% block title %}
+Login Page
+{% endblock %}
+
+<!-- 3. contents -->
+{% block content %}
+
+<!-- flash messages -->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for msg in messages %}
+            <p>{{ msg }}</p>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<!-- main -->
+<form method="POST">
+    <label for="username">Username: </label>
+    <input type="text" id="username" name="username"><br>
+
+    <!-- label for 속성: input id와 연결된 label임을 설정 -->
+    <label for="password">Password: </label>
+    <input type="password" id="password" name="password"><br>
+    <button type="submit">로그인</button>
+</form>
+<p>계정이 없으신가요? <a href="{{ url_for('signin') }}">회원가입</a></p>
+
+{% endblock %}
