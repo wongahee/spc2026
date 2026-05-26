@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>stream chatting</h1>
+    <input type="text" id="input" placeholder="메시지를 입력하시오.">
+    <button id="send">전송</button>
+    <div id="chat">
+        <!-- 응답 출력 영역 -->
+    </div>
+    <script>
+        const input = document.getElementById('input');
+        const send = document.getElementById('send');
+        const chat = document.getElementById('chat');
+
+        send.addEventListener('click', async () => {
+            const message = input.value.trim();
+
+            const response = await fetch("/stream", {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message})
+            });
+
+            // const data = await response.json()  // 우리가 알던 응답
+            // event-stream (data: <내용> \n\n)
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let fullText = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+
+                if (done) break;
+                // console.log("읽은 데이터: ", done, value)
+
+                const chunk = decoder.decode(value, {stream: true});
+                fullText += chunk.replace(/\n/g, '<br>');   // 서버에서 보내온 콘솔용 뉴라인(\n)을 웹용 뉴라인 (<br>)로 바꾼다.
+                chat.innerHTML = fullText;
+
+                chat.scrollTop = chat.scrollHeight;
+            }
+        })
+    </script>
+</body>
+</html>
