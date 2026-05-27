@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>코드 취약점 분석기</title>
+</head>
+<body>
+    <h1>Github 코드 취약점 분석기</h1>
+    <form id="urlForm">
+        <h4>GitHub 파일 URL: </h4>
+        <input type="text" id="url" name="url" value="https://github.com/lovehyun/tutorial-python/blob/main/11.security/1.sqli/app_weak.py" style="width:500px" />
+        <h4>분석할 취약점 유형 선택 (복수 선택 가능):</h4>
+        <div>
+            <label><input type="checkbox" name="vulner" value="1" />민감정보 (하드코딩된 암호)</label>
+            <label><input type="checkbox" name="vulner" value="2" />SQL Injection</label>
+            <label><input type="checkbox" name="vulner" value="3" />XSS</label>
+        </div>
+        <button type="submit">Check</button>
+    </form>
+    <h2>소스 코드</h2>
+    <pre id="source-code">
+        <!-- 취약점 코드 출력 영역 -->
+    </pre>
+    <h2>분석 결과</h2>
+    <pre id="result">
+        <!-- 결과 출력 영역 -->
+    </pre>
+
+    <script>
+        document.getElementById('urlForm').addEventListener('submit', async (ev) => {
+            ev.preventDefault();
+            
+            const code = document.getElementById('url').value;
+            const s_code = document.getElementById('source-code');
+            const result = document.getElementById('result');
+
+            // 1. fetch, post로 소스코드 내용을 보내기
+            const response = await fetch("/api/codecheck", {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ url : code })
+            });
+
+            // 2. 소스코드와 결과 출력
+            const data = await response.json();
+
+            s_code.textContent = data.s_code;
+            result.innerHTML = data.result;
+        })
+    </script>
+</body>
+</html>
