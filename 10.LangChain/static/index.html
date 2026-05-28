@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPC 작명소</title>
+</head>
+<body>
+    <h1>회사 이름 생성기</h1>
+    <input type="text" id="userInput" placeholder="회사의 상품명을 입력하시오.">
+    <button id="send">이름 생성</button>
+    <h2>결과</h2>
+    <ul id="resultList">
+
+    </ul>
+
+    <script>
+        document.getElementById('send').addEventListener('click', async () => {
+            const userInput = document.getElementById('userInput').value;
+            const result = document.getElementById('resultList');
+
+            // 백엔드로 보내기
+            const response = await fetch('/api/name', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({product: userInput})
+            });
+
+            // 결과 받아오기
+            const data = await response.json();
+            console.log(data)
+
+            // 화면 출력
+
+            result.innerHTML = '';  // 이전 출력 클리어
+
+            data.chatbot.forEach((name) => {
+                const li = document.createElement('li')
+                li.textContent = name;
+                result.appendChild(li);
+            });
+        })
+    </script>
+</body>
+</html>
