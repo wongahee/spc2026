@@ -1,58 +1,58 @@
-# 목적: 뉴스 분석
-# 뉴스 입력 => 요약 / 감정 / 카테고리 분석
-
+# 목적 - 뉴스를 분석한다.
+# 뉴스 입력 -> 요약 
+#          -> 감정분석 
+#          -> 카테고리 분석
 # RunnableParallel
 
 from dotenv import load_dotenv
 
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.runnables import RunnableParallel
 from langchain_core.output_parsers import StrOutputParser
+
+from langchain_core.runnables import RunnableParallel
 
 load_dotenv()
 
 llm = ChatOpenAI(model="gpt-4o-mini")
 
-input_text = {
-    "news": "최근 영국 매체 데일리메일은 영양학자 소피 가스트만(Sophie Gastman)의 설명을 인용해 타히니의 건강 효능과 섭취 방법에 대해 소개했다. 타히니는 볶은 참깨를 곱게 갈아 만든 베이지색 페이스트로, 중동식 요리인 후무스의 재료로 잘 알려져 있다. 설명에 따르면 타히니는 참깨를 통째로 갈아 만드는 만큼 참깨의 영양 성분을 그대로 담고 있는 식품이다. 식이섬유와 단백질 함량이 높은 편이며 칼슘·마그네슘·철분·아연·구리 등 다양한 미네랄도 풍부하게 포함돼 있다. 특히 칼슘은 뼈와 치아 건강 유지에 도움을 줄 수 있고, 마그네슘은 혈압과 혈당 조절, 신경 기능 등에 관여한다. 철분은 산소 운반과 피로 예방에 필요하며 아연은 면역 기능과 상처 회복 등에 중요한 역할을 한다."
-}
+# chain 이란? prompt | llm | parser
+prompt1 = ChatPromptTemplate.from_template("다음 뉴스를 2~3문장으로 요약해줘.\n\n{news}")
+summary_chain = prompt1 | llm | StrOutputParser()
 
-prompt1 = ChatPromptTemplate.from_messages(
-    ("system", "당신은 뉴스 분석가입니다."),
-    ("human", "다음 뉴스를 {news} 결과만 출력하시오.")
-)
-
-# 요약
-summary_chain = (
-    prompt1
-    | llm
-    | StrOutputParser()
-)
-
-# 감정
 sentiment_chain = (
-    prompt1
+    ChatPromptTemplate.from_template("다음 뉴스의 전반적 감성을 한 단어로 분석해줘 (긍정 / 부정 / 중립).\n\n{news}")
     | llm
     | StrOutputParser()
 )
 
-# 카테고리
 category_chain = (
-    prompt1
+    ChatPromptTemplate.from_template("다음 뉴스의 카테고리를 한 단어로 분석해줘 (정치/경제/사회/IT/스포츠/기타).\n\n{news}")
     | llm
     | StrOutputParser()
 )
 
-parallel_chain = RunnableParallel({
+final_chain = RunnableParallel({
     "summary": summary_chain,
     "sentiment": sentiment_chain,
     "category": category_chain
 })
 
-result = parallel_chain.invoke(input_text)
+news = """
+알리바바닷컴이 중소기업(SME)을 위한 에이전틱 AI 비즈니스 팀 ‘Accio Work(액시오 워크)’를 한국 시장에 공식 출시했다. 단순 질의응답형 AI를 넘어 실제 비즈니스 업무를 자율적으로 수행하는 ‘에이전트 투 에이전트(A2A·Agent to Agent)’ 시대를 본격화하겠다는 구상이다.
 
-print(f"- 원문: {result}")
-print("- 요약: ", result['summary'])
-print("- 감정: ", result['sentiment'])
-print("- 카테고리: ", result['category'])
+
+알리바바닷컴은 28일 롯데호텔 서울에서 ‘액시오 워크 한국 공식 출시 기자간담회’를 열고 시장 조사부터 상품 기획, 글로벌 소싱, 가격 협상, 상품 등록, 마케팅, 스토어 운영까지 전 과정을 AI 에이전트가 수행하는 액시오 워크를 공개했다.
+
+
+이번에 공개된 액시오 워크의 핵심은 단순 보조 도구 수준을 넘어 실제 업무를 실행하는 ‘플러그 앤 플레이형 AI 에이전트 팀’이라는 점이다. 사용자의 명령을 기다리는 기존 AI 어시스턴트 개념에서 벗어나 목표를 설정하면 AI가 스스로 업무를 수행하고 운영을 지속하는 구조다.
+
+
+션 양 알리바바닷컴 아시아태평양(APAC) 지역 총괄 본부장은 이날 “AI는 더 이상 미래 기술이 아니라 글로벌 무역 운영 방식을 바꾸는 핵심 인프라가 되고 있다”며 “앞으로 무역 업계는 사람 대 사람 거래를 넘어 에이전트 대 에이전트(A2A) 거래 시대로 진입하게 될 것”이라고 말했다.
+"""
+
+result = final_chain.invoke({"news": news})
+print(f"원문: {news}")
+print(f"요약: {result["summary"]}")
+print(f"감성: {result["sentiment"]}")
+print(f"카테고리: {result["category"]}")
