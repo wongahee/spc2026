@@ -16,7 +16,7 @@ def send_payment(recipient: str, amount: int) -> str:
     return f"{recipient}에게 {amount}원 송금 완료"
 
 @tool
-def get_balance(account: str) -> str:
+def get_balance(account: str) -> int:
     """ 계좌 잔액 조회 """
     return {"alice": 1_000_000, "bob": 500_000}.get(account, 0)
 
@@ -48,3 +48,6 @@ print(f"사람이 수정했음 10000 -> 5000")
 # 3. 다시 이어서 실행
 result = agent.invoke(None, config=config)
 print(f"[최종] {result['messages'][-1].content}")
+
+result = agent.invoke(None, config=config)  # 할일을 계속 이어서 하시오
+print(f"[최종] {result}")

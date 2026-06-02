@@ -16,7 +16,7 @@ def send_payment(recipient: str, amount: int) -> str:
     return f"{recipient}에게 {amount}원 송금 완료"
 
 @tool
-def get_balance(account: str) -> str:
+def get_balance(account: str) -> int:
     """ 계좌 잔액 조회 """
     return {"alice": 1_000_000, "bob": 500_000}.get(account, 0)
 
