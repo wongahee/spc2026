@@ -59,7 +59,9 @@ else:
         print(f"사람이 수정했음 10000 -> {new_amount}")
 
 # 3. 다시 이어서 실행
-result = agent.invoke(None, config=config)
+result = agent.invoke(None, config=config)  # 할 일 이어서
+
+# 할일 이어서 (말없이 끝 or 최종 결론 재요약할 수도 있음)
 final = result['messages'][-1].content
 
 if not final:
