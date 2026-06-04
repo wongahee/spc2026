@@ -14,7 +14,7 @@ parser = StrOutputParser()
 
 vote_prompt = ChatPromptTemplate.from_template(
     """
-    당신은 번역 품질 평가자입니다. 다음 번역의 품질을 평가해주세요.
+    당신은 번역 품질 평가자입니다. 다음 영어 문장을 자연스러운 한국어로 번역하고, 품질을 평가해주세요.
 
     원문(영어): {original}
     번역(한국어): {translation}
@@ -33,7 +33,16 @@ voter3 = vote_prompt | llm3 | parser
 
 parallel_vote = RunnableParallel(
     # 동시에 3개를 부름
+    voter1=voter1,
+    voter2=voter2,
+    voter3=voter3 
 )
+
+result = parallel_vote.invoke({
+    "original": "Artificial intelligence is transforming the way people work, learn, and communicate.",
+})
+
+print(result)
 
 # 번역 전문 챗봇 솔루션
 # 1. 여러 개의 모델
