@@ -8,13 +8,14 @@ from langchain_core.runnables import RunnableParallel
 load_dotenv()
 
 llm = ChatOpenAI(model="gpt-4o-mini")
+
 parser = StrOutputParser()
 
 # 병렬 처리를 통해서 시간을 단축한다.
 
 vote_prompt = ChatPromptTemplate.from_template(
     """
-    당신은 번역 품질 평가자입니다. 다음 영어 문장을 자연스러운 한국어로 번역하고, 품질을 평가해주세요.
+    당신은 번역 품질 평가자입니다. 다음 번역의 품질을 평가해주세요.
 
     원문(영어): {original}
     번역(한국어): {translation}
@@ -33,9 +34,9 @@ voter3 = vote_prompt | llm3 | parser
 
 parallel_vote = RunnableParallel(
     # 동시에 3개를 부름
-    voter1=voter1,
-    voter2=voter2,
-    voter3=voter3 
+    v1=voter1,
+    v2=voter2,
+    v3=voter3
 )
 
 result = parallel_vote.invoke({
