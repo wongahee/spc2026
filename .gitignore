@@ -24,3 +24,5 @@ chroma_db/
 # Data
 history.json
 *.pdf
+
+*.png
