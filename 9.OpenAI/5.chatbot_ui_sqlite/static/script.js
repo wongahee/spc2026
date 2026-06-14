@@ -37,6 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
         chatbotReply.innerText = data.reply;
         resultDiv.appendChild(chatbotReply);
 
-        
+        resultDiv.scrollTop = resultDiv.scrollHeight;
     })
 })
