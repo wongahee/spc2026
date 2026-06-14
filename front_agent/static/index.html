@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나만의 챗봇</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">나만의 챗봇 🤖</div>
+        
+        <div id="result">
+            <!-- 예시 말풍선 (스크립트 연결 시 삭제 가능) -->
+            <div class="message bot-message">안녕하세요! 무엇을 도와드릴까요?</div>
+        </div>
+
+        <form id="user-input-form">
+            <input type="text" id="user-input" placeholder="메시지를 입력하세요..." autocomplete="off">
+            <button type="submit">전송</button>
+        </form>
+    </div>
+    <script src="/script.js"></script>
+</body>
+</html>
