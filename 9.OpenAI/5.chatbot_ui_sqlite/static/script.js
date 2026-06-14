@@ -32,7 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = await response.json();    // promise
         console.log(data)
 
-        const chatbotReply = document.createElement('p')
+        const chatbotReply = document.createElement('div');
+        chatbotReply.classList.add('message', 'bot-message');
         chatbotReply.innerText = data.reply;
         resultDiv.appendChild(chatbotReply);
 
