@@ -1,0 +1,126 @@
+=== MCP Proxy Debug Log ===
+[PROXY] 서버 시작: 2.mcp_server.py
+[PROXY] 메시지 중계 시작
+
+[C->S] {
+  "method": "initialize",
+  "params": {
+    "protocolVersion": "2025-11-25",
+    "capabilities": {},
+    "clientInfo": {
+      "name": "mcp",
+      "version": "0.1.0"
+    }
+  },
+  "jsonrpc": "2.0",
+  "id": 0
+}
+
+[S->C] {
+  "jsonrpc": "2.0",
+  "id": 0,
+  "result": {
+    "protocolVersion": "2025-11-25",
+    "capabilities": {
+      "experimental": {},
+      "prompts": {
+        "listChanged": false
+      },
+      "resources": {
+        "subscribe": false,
+        "listChanged": false
+      },
+      "tools": {
+        "listChanged": false
+      }
+    },
+    "serverInfo": {
+      "name": "HelloWorld",
+      "version": "1.27.2"
+    }
+  }
+}
+
+[C->S] {
+  "method": "notifications/initialized",
+  "jsonrpc": "2.0"
+}
+
+[C->S] {
+  "method": "tools/list",
+  "jsonrpc": "2.0",
+  "id": 1
+}
+[SERVER_OUTPUT] [06/09/26 11:29:50] INFO     Processing request of type           server.py:727
+[SERVER_OUTPUT] ListToolsRequest
+
+[S->C] {
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "tools": [
+      {
+        "name": "hello",
+        "description": "",
+        "inputSchema": {
+          "properties": {
+            "name": {
+              "title": "Name",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "title": "helloArguments",
+          "type": "object"
+        },
+        "outputSchema": {
+          "properties": {
+            "result": {
+              "title": "Result",
+              "type": "string"
+            }
+          },
+          "required": [
+            "result"
+          ],
+          "title": "helloOutput",
+          "type": "object"
+        }
+      }
+    ]
+  }
+}
+
+[C->S] {
+  "method": "tools/call",
+  "params": {
+    "name": "hello",
+    "arguments": {
+      "name": "John"
+    }
+  },
+  "jsonrpc": "2.0",
+  "id": 2
+}
+[SERVER_OUTPUT] INFO     Processing request of type           server.py:727
+[SERVER_OUTPUT] CallToolRequest
+
+[S->C] {
+  "jsonrpc": "2.0",
+  "id": 2,
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "Hello, John!"
+      }
+    ],
+    "structuredContent": {
+      "result": "Hello, John!"
+    },
+    "isError": false
+  }
+}
+[PROXY] 종료

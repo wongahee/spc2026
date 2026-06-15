@@ -33,3 +33,5 @@ my_local_model_nsmc_kr/
 results/
 results_kr/
 results_nsmc_kr/
+
+*.json
